@@ -3,7 +3,7 @@ import 'package:cinema_pedia/domain/entities/movie.dart';
 import 'package:cinema_pedia/domain/repositories/movies_repository.dart';
 
 class MovieRepositoryImpl extends MoviesRepository {
-  final MovieDatasource datasource;
+  final MoviesDatasource datasource;
 
   MovieRepositoryImpl(this.datasource);
 
