@@ -15,11 +15,10 @@ class MovieMappers {
       popularity: movieDB.popularity,
       posterPath: (movieDB.posterPath != '')
           ? 'https://image.tmdb.org/t/p/w500/${movieDB.posterPath}'
-          // : 'https://upload.wikimedia.org/wikipedia/commons/6/64/Poster_not_available.jpg',
-          : 'No - Image',
+          : 'https://upload.wikimedia.org/wikipedia/commons/6/64/Poster_not_available.jpg',
       releaseDate: movieDB.releaseDate,
       title: movieDB.title,
       video: movieDB.video,
-      voteAverage: movieDB.voteAverage,
+      voteAverage: movieDB.voteAverage.floorToDouble(),
       voteCount: movieDB.voteCount);
 }

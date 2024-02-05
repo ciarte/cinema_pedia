@@ -29,23 +29,66 @@ class _HomeViewState extends ConsumerState<_HomeView> {
     super.initState();
 
     ref.read(nowPlayingMoviesProvider.notifier).loadNextPage();
+    ref.read(popularMoviesProvider.notifier).loadNextPage();
+    ref.read(topRatedMoviesProvider.notifier).loadNextPage();
+    ref.read(upcomingMoviesProvider.notifier).loadNextPage();
   }
 
   @override
   Widget build(BuildContext context) {
+    final initialLoading = ref.watch(initialLoadingProvideer);
+    if (initialLoading) return const FullScreenLoader();
+
     final nowPlayingMovies = ref.watch(nowPlayingMoviesProvider);
     final moviesSlideShow = ref.watch(moviesSlideShowProvider);
+    final popularMovies = ref.watch(popularMoviesProvider);
+    final topRatedMovies = ref.watch(topRatedMoviesProvider);
+    final upcomingMovies = ref.watch(upcomingMoviesProvider);
 
-    return Column(children: [
-      const CustomAppbar(),
-      MoviesSlideShow(
-        movies: moviesSlideShow,
+    return CustomScrollView(slivers: [
+      const SliverAppBar(
+        floating: true,
+        flexibleSpace: FlexibleSpaceBar(title: CustomAppbar()),
       ),
-      MovieHorizontalListview(
-        movies: nowPlayingMovies,
-        title: 'En cartelera',
-        subtitle: 'Lunes',
-      )
+      SliverList(
+          delegate: SliverChildBuilderDelegate((context, index) {
+        return Column(children: [
+          MoviesSlideShow(
+            movies: moviesSlideShow,
+          ),
+          MovieHorizontalListview(
+            movies: nowPlayingMovies,
+            title: 'En cartelera',
+            subtitle: 'Lunes',
+            loadNextPage: () =>
+                ref.read(nowPlayingMoviesProvider.notifier).loadNextPage(),
+          ),
+          MovieHorizontalListview(
+            movies: upcomingMovies,
+            title: 'Proximamente',
+            subtitle: 'Este mes',
+            loadNextPage: () =>
+                ref.read(upcomingMoviesProvider.notifier).loadNextPage(),
+          ),
+          MovieHorizontalListview(
+            movies: popularMovies,
+            title: 'Populares',
+            // subtitle: 'Lunes',
+            loadNextPage: () =>
+                ref.read(popularMoviesProvider.notifier).loadNextPage(),
+          ),
+          MovieHorizontalListview(
+            movies: topRatedMovies,
+            title: 'Mejor calificada',
+            subtitle: 'Todos los tiempos',
+            loadNextPage: () =>
+                ref.read(topRatedMoviesProvider.notifier).loadNextPage(),
+          ),
+          const SizedBox(
+            height: 25,
+          )
+        ]);
+      }, childCount: 1)),
     ]);
   }
 }
